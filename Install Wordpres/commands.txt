@@ -1,0 +1,67 @@
+sudo apt update
+sudo apt install unzip -y
+
+sudo apt install mariadb-server -y
+sudo mysql_secure_installation
+
+-> Enter
+-> n
+-> n
+-> y
+-> y
+-> y
+-> y
+
+sudo mysql
+
+CREATE DATABASE wordpress;
+CREATE USER wordpressuser@localhost IDENTIFIED BY 'Password';
+GRANT ALL PRIVILEGES ON wordpress.* TO wordpressuser@localhost;
+FLUSH PRIVILEGES;
+EXIT;
+
+sudo apt install apache2 -y
+sudo apt install php libapache2-mod-php -y
+sudo apt install php-mysql php-gd php-curl php-json php-dom php-exif php-fileinfo php-imagick php-mbstring php-zip php-xml -y
+
+sudo mkdir /var/www/wordpress.hatbe.ch
+
+sudo wget https://wordpress.org/latest.zip
+sudo unzip latest.zip && sudo rm latest.zip
+sudo mv wordpress/* ./ && sudo rm -R wordpress
+
+sudo chown www-data:www-data /var/www/wordpress.hatbe.ch -R
+sudo chmod 755 /var/www/wordpress.hatbe.ch -R
+
+sudo nano /etc/apache2/sites-available/wordpress.hatbe.ch.conf
+
+->
+
+<VirtualHost *:80>
+    ServerName wordpress.hatbe.ch
+    ServerAdmin webmaster@hatbe.ch
+    DocumentRoot /var/www/wordpress.hatbe.ch
+
+    <Directory /var/www/wordpress.hatbe.ch>
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+        Options -Indexes
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/wordpress.hatbe.ch.error.log
+    CustomLog ${APACHE_LOG_DIR}/wordpress.hatbe.ch.access.log combined
+</VirtualHost>
+
+<-
+
+sudo a2ensite wordpress.hatbe.ch.conf
+sudo systemctl reload apache2
+
+-> configure on site
+
+sudo apt install python3-pip -y
+sudo apt install certbot python3-certbot-apache -y
+sudo certbot --apache
+
+systemctl reload apache2
