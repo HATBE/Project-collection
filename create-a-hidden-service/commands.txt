@@ -1,0 +1,13 @@
+sudo apt update
+
+sudo apt install apache2 -y
+
+sudo apt install tor -y
+sudo nano /etc/tor/torrc -l
+
+uncomment line 71 and 72
+... HiddenServiceDir /var/lib/tor/hidden_service/
+... HiddenServicePort 80 127.0.0.1:80
+
+sudo systemctl restart tor
+sudo cat /var/lib/tor/hidden_service/hostname
